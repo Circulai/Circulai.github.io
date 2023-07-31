@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Lebenserwartungsschätzer</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="liveEstimator.js" defer></script>
+</head>
+<body>
+  <div class="container">
+    <h1>Lebenserwartungsschätzer</h1>
+
+    <form id="questionnaireForm">
+      <div class="question">
+        <label>Geburtsdatum:</label>
+        <input type="date" name="dob" id="birthday" >
+      </div>
+      <!-- <div class="question">
+        <label>Geschlecht (XX oder XY):</label>
+        <input type="text" name="gender" id="gender" >
+      </div> -->
+      <div class="question">
+        <label>Geschlecht</label>
+        <select name="gender" id="gender">
+          <option value="">Bitte auswählen</option>
+          <option value="Frau">Frau</option>
+          <option value="Mann">Mann</option>
+          <option value="Divers">Divers</option>
+        </select>
+      </div>
+
+
+      <div class="question">
+        <label>Größe (cm):</label>
+        <!-- <input type="number" name="height" required> -->
+        <input type="number" name="height" pattern="[0-9]*" inputmode="numeric">
+      </div>
+      <div class="question">
+        <label>Gewicht (kg):</label>
+        <input type="number" name="weight" >
+      </div>
+      <div class="question">
+        <label>Machst du Sport?</label>
+        <select name="exercise">
+          <option value="">Bitte auswählen</option>
+          <option value="Ja">Ja</option>
+          <option value="Nein">Nein</option>
+        </select>
+      </div>
+      <div class="question">
+        <label>Wie viel Alkohol trinkst du pro Woche?</label>
+        <input type="number" name="alcohol" >
+      </div>
+      <div class="question">
+        <label>Vorerkrankungen?</label>
+        <input type="text" name="preexisting" >
+      </div>
+      <div class="question">
+        <label>Liegt eine Behinderung vor? Wenn ja, welche?</label>
+        <input type="text" name="disability" >
+      </div>
+      <div class="question">
+        <label>Derzeitige Medikation?</label>
+        <input type="text" name="medication" >
+      </div>
+      <div class="question">
+        <label>Erkrankungen in der Familie?</label>
+        <input type="text" name="familyIllness" >
+      </div>
+      <div class="question">
+        <label>Psychische Erkrankungen?</label>
+        <input type="text" name="mentalIllness" >
+      </div>
+      <div class="question">
+        <label>Würdest du dich als positiven, pessimistischen oder neutralen Menschen einstufen?</label>
+        <select name="personality" >
+          <option value="">Bitte auswählen</option>
+          <option value="Positiv">Positiv</option>
+          <option value="Pessimistisch">Pessimistisch</option>
+          <option value="Neutral">Neutral</option>
+        </select>
+      </div>
+      <div class="question">
+        <label>Wurdest du schon operiert?</label>
+        <select name="surgery" >
+          <option value="">Bitte auswählen</option>
+          <option value="Ja">Ja</option>
+          <option value="Nein">Nein</option>
+        </select>
+      </div>
+      <div class="question">
+        <label>Wie oft putzt du dir täglich die Zähne?</label>
+        <input type="number" name="teethCleaning" >
+      </div>
+      <div class="question">
+        <label>Wie oft trinkst du pro Tag?</label>
+        <input type="number" name="dailyWater" >
+      </div>
+      <div class="question">
+        <label>Ernährst du dich gesund?</label>
+        <select name="healthyDiet" >
+          <option value="">Bitte auswählen</option>
+          <option value="Ja">Ja</option>
+          <option value="Nein">Nein</option>
+        </select>
+      </div>
+      <div class="question">
+        <label>Hast du Allergien?</label>
+        <input type="text" name="allergies" >
+      </div>
+      <div class="question">
+        <label>Wie viel Stress hast du in deinem Leben?</label>
+        <input type="text" name="stressLevel" >
+      </div>
+      <div class="question" id="onlyForWomen">
+        <label>Bei Frauen: Bist oder warst du schon mal schwanger?</label>
+        <select name="pregnancy" >
+          <option value="">Bitte auswählen</option>
+          <option value="Ja">Ja</option>
+          <option value="Nein">Nein</option>
+        </select>
+      </div>
+      <div class="question">
+        <label>Stellt deine Arbeit eine physische oder psychische Belastung dar?</label>
+        <input type="text" name="workStress" >
+      </div>
+      <!-- Kategorie zur verschwendeten Lebenszeit -->
+      <h2>Kategorie zur verschwendeten Lebenszeit</h2>
+      <div class="question">
+        <label>Wie viele Stunden schläfst du pro Tag?</label>
+        <input type="number" name="sleepHours" >
+      </div>
+      <div class="question">
+        <label>Wie viele Stunden bist du täglich nur am Handy?</label>
+        <input type="number" name="phoneUsageHours" >
+      </div>
+      <div class="question">
+        <label>Wie viele Stunden arbeitest du pro Tag?</label>
+        <input type="number" name="workHours" >
+      </div>
+      <button type="submit">Berechnen</button>
+    </form>
+    
+
+    <!-- <form style="display: none;" action="lifeTimer.html" method="POST" id="questionnaireForm"> -->
+    <form action="lifeTimer.html" method="GET" id="sendingResults" style="display: none;">
+      <input name="result" id="result">
+      <button type="submit">Zum Lebenszeitrechner</button>
+    </form>
+  </div>
+
+
+</body>
+</html>
