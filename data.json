@@ -1,1 +1,4 @@
-{"views":"18","user":{"IP-Address":"192.168.12", "lastVisited":"19.11.2023","visitCount":"3"}
+{
+  "key": "Hello world",
+  "updated": true
+}
