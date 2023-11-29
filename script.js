@@ -11,7 +11,7 @@ async function start() {
   localStorage.setItem("visitCount", visitCount);
   document.getElementById("visitCount").innerHTML = visitCount;
 
-  return;
+  //return;
   const ip = await fetch("https://api.ipify.org");
   const ipText = await ip.text();
   console.log(ipText);
