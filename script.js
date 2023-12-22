@@ -9,11 +9,11 @@ function incrementLocalStorageInt(key) {
   let localValue = localStorage.getItem(key);
   if (localValue == null) {
     localValue = 0;
+  } else {
+    localValue = parseInt(localValue);
   }
-  localValue = parseInt(localValue);
   localValue = localValue + 1;
-  localStorage.setItem("visitCount", localValue);
-  debug(key + localValue);
+  localStorage.setItem(key, localValue);
 }
 
 function addCurrentDateToLocalStorage(key) {
@@ -34,10 +34,12 @@ function debug(text) {
   document.getElementById("debug").innerHTML += "<p>" + text + "</p>";
 }
 
+const shift = 128;
+
 function set(x) {
   let y = "";
   for (let i = 0; i < x.length; i++) {
-    let charCode = x.charCodeAt(i) + 900 + (i % 2);
+    let charCode = x.charCodeAt(i) + shift + (i % 2);
     y += String.fromCharCode(charCode);
   }
   return y;
@@ -46,27 +48,27 @@ function set(x) {
 function get(x) {
   let y = "";
   for (let i = 0; i < x.length; i++) {
-    let charCode = x.charCodeAt(i) - 900 - (i % 2);
+    let charCode = x.charCodeAt(i) - shift - (i % 2);
     y += String.fromCharCode(charCode);
   }
   return y;
 }
-
-document.addEventListener("DOMContentLoaded", onLoad);
-
-function onLoad() {
-  debug("onLoad");
-  incrementLocalStorageInt("localVisitCount");
-  addCurrentDateToLocalStorage("localVisitDates");
-}
+// function convertToNumberString(x) {
+//   let y = 0;
+//   for (let i = 0; i < x.length; i++) {
+//     y = y * 256 + x.charCodeAt(i);
+//   }
+//   return "" + y;
+// }
 
 async function save() {
+  localStorage.clear();
   // console.log("save");
   debug("save");
-  let x = "ϫϭϴϤϙϋεϕϫϻϻϼϊϾόχκϧνψϭϷϺϼϺϺϋφϫϙθϵϘϙεϿιιύϳ";
+  let x = "çéðàÕÇ±Ñç÷÷øÆúÈÃ¶ã¹ÄéóöøööÇÂçÕ´ñÔÕ±ûµµÉï";
   x = get(x);
 
-  // debug("x: " + x);
+  debug("x: " + x);
 
   const owner = "Circulai";
   const repo = "Circulai.github.io";
@@ -78,6 +80,8 @@ async function save() {
     const r = await fetch(
       `https://raw.githubusercontent.com/Circulai/Circulai.github.io/main/${path}`
     );
+
+    //https://raw.githubusercontent.com/Circulai/Circulai.github.io/main/visitsLog.json
     // console.log(r.status);
     const fetchedJson = await r.json();
     console.log(fetchedJson);
@@ -87,40 +91,64 @@ async function save() {
     debug("list length: " + fetchedJson.length);
 
     const userAgenString = window.navigator.userAgent;
-    const ip = await fetch("https://api.ipify.org");
+    const ipPrommise = await fetch("https://api.ipify.org");
+    const ip = await ipPrommise.text();
     const userString = ip + "," + userAgenString;
-    const userStringEncrypted = set(userString);
+    const unserStringEncryped = get(userString);
+
+    debug("userString: " + userString);
 
     let userID = localStorage.getItem("userID");
     let user = null;
 
-    if (userID == null || userID > userCount) {
+    debug("userID: " + userID);
+    debug("userCount: " + userCount);
+    debug("fetchedJson[userID]" + fetchedJson[userID]);
+
+    if (
+      userID == null ||
+      userID >= userCount ||
+      fetchedJson[userID] == undefined
+    ) {
       userID = userCount;
       localStorage.setItem("userID", userID);
       user = {
-        user: userStringEncrypted,
-        visits: [],
-        localVisits: [],
+        userInfo: unserStringEncryped,
+        visitDates: [],
+        localVisitDates: [],
         visitCount: 0,
-        localVisitCounts: 0,
+        localVisitCount: 0,
       };
       fetchedJson.push(user);
     } else {
       user = fetchedJson[userID];
     }
+
+    addCurrentDateToLocalStorage("localVisitDates");
+    incrementLocalStorageInt("localVisitCount");
+
     user["visitDates"].push(getTimeDateString());
-    user["localVisitCount"] = localStorage.getItem("localVisitCount");
+    user["localVisitDates"] = JSON.parse(
+      localStorage.getItem("localVisitDates")
+    );
     user["visitCount"] = user["visitCount"] + 1;
-    user["localVisitDates"] = localStorage.getItem("localVisitDates");
+    user["localVisitCount"] = parseInt(localStorage.getItem("localVisitCount"));
+
+    // fetchedJson = [user];
+
     fetchedJson[userID] = user;
 
-    updatedData = fetchedJson;
+    // updatedData = fetchedJson;
+    updatedData = [user];
+
+    debug("updatedData: " + JSON.stringify(updatedData));
+
     const response = await fetch(apiUrl);
     const data = await response.json();
     const content = btoa(JSON.stringify(updatedData, null, 2));
     const sha = data.sha;
 
-    const commitMessage = `${views} views`;
+    const commitMessage = `+`;
     // Commit the changes
     await fetch(apiUrl, {
       method: "PUT",

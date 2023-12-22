@@ -7,7 +7,27 @@
 </head>
 <body>
 
+  <div class="sliderDiv" style="position: absolute; top:50px">
+ <input type="range" min="0" max="255" value="5" class="slider" id="myRange" >
+  <p>Shift: <span id="sliderValueText"></span></p>
+  </div>
+  <script>
+    var slider = document.getElementById("myRange");
+    var output = document.getElementById("sliderValueText");
+    output.innerHTML = slider.value;
+    slider.oninput = function() {
+      output.innerHTML = this.value;
+      shift = parseInt(this.value);
+      console.log(shift);
+
+
+
+    }
+  </script>
+ 
 <div>
+  <!-- //slider -->
+  
   <div>
     <label for="inputString">Input String:</label>
     <input type="text" id="inputString" placeholder="Enter your message">
@@ -34,7 +54,8 @@
  </div>
 
   <script>
-    const shift = 900;
+    let shift = 900;
+
     const rollingWindow = 2;
     const addRandomChar = false;
 
@@ -43,6 +64,8 @@
       // stringToEncrypt = stringtoSuffledArrayString(inputString);
       stringToEncrypt = inputString;
       let encrypted = "";
+
+      
 
       if (addRandomChar) {
 
@@ -59,6 +82,8 @@
   
   }else{  
       for (let i = 0; i < stringToEncrypt.length; i++) { 
+        console.log(shift);
+
       let charCode = stringToEncrypt.charCodeAt(i) + shift + (i%rollingWindow); //937
       encrypted += String.fromCharCode(charCode);
   }
@@ -100,7 +125,7 @@ function decryptCypher(encrypted) {
       let cypherDisplay = document.getElementById("cypherDisplay");
       cyperText = cypher;
       cypherDisplay.value = cyperText
-      navigator.clipboard.writeText(cyperText);
+      // navigator.clipboard.writeText(cyperText);
 
       document.getElementById("cypherInput").value = cyperText;
       getBack();
