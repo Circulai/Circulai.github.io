@@ -7,22 +7,30 @@
 </head>
 <body>
 
-  <div class="sliderDiv" style="position: absolute; top:50px">
- <input type="range" min="0" max="255" value="5" class="slider" id="myRange" >
-  <p>Shift: <span id="sliderValueText"></span></p>
+  <div style="position: absolute; top:50px">
+      <span>Shift:</span>
+    <input type="text" id="textInput" value="900" class="slider" style="width: 30px; text-align: center; border-radius: 10px; border: none;">
+  <input type="range" min="0" max="1000" value="5" class="slider" id="myRange" style="padding: 0px; margin: 0px;" >
+
   </div>
   <script>
-    var slider = document.getElementById("myRange");
-    var output = document.getElementById("sliderValueText");
-    output.innerHTML = slider.value;
-    slider.oninput = function() {
-      output.innerHTML = this.value;
-      shift = parseInt(this.value);
-      console.log(shift);
-
-
-
+    var textInput = document.getElementById("textInput");
+    textInput.oninput = function() {
+      if (!isNaN(this.value)) {
+        shift = parseInt(this.value);
+        console.log(shift);
+        generateCypher();
+      }
     }
+
+    var slider = document.getElementById("myRange");
+    slider.oninput = function() {
+      document.getElementById("textInput").value = this.value;
+      shift = parseInt(this.value);
+      generateCypher();
+    }
+
+
   </script>
  
 <div>

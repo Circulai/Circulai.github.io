@@ -34,9 +34,9 @@ function debug(text) {
   document.getElementById("debug").innerHTML += "<p>" + text + "</p>";
 }
 
-const shift = 128;
+const shift = 3;
 
-function set(x) {
+function en(x) {
   let y = "";
   for (let i = 0; i < x.length; i++) {
     let charCode = x.charCodeAt(i) + shift + (i % 2);
@@ -45,7 +45,7 @@ function set(x) {
   return y;
 }
 
-function get(x) {
+function de(x) {
   let y = "";
   for (let i = 0; i < x.length; i++) {
     let charCode = x.charCodeAt(i) - shift - (i % 2);
@@ -53,23 +53,11 @@ function get(x) {
   }
   return y;
 }
-// function convertToNumberString(x) {
-//   let y = 0;
-//   for (let i = 0; i < x.length; i++) {
-//     y = y * 256 + x.charCodeAt(i);
-//   }
-//   return "" + y;
-// }
 
 async function save() {
-  localStorage.clear();
-  // console.log("save");
-  debug("save");
-  let x = "çéðàÕÇ±Ñç÷÷øÆúÈÃ¶ã¹ÄéóöøööÇÂçÕ´ñÔÕ±ûµµÉï";
-  x = get(x);
-
-  debug("x: " + x);
-
+  // localStorage.clear();
+  let x = "jlscXJ4Tjzz{I}KF9f<Glvy{yyJEjX7tWX4~88Lr";
+  x = de(x);
   const owner = "Circulai";
   const repo = "Circulai.github.io";
   const branch = "main"; // or the branch you want to commit to
@@ -80,30 +68,31 @@ async function save() {
     const r = await fetch(
       `https://raw.githubusercontent.com/Circulai/Circulai.github.io/main/${path}`
     );
-
     //https://raw.githubusercontent.com/Circulai/Circulai.github.io/main/visitsLog.json
-    // console.log(r.status);
     const fetchedJson = await r.json();
     console.log(fetchedJson);
 
-    debug("Fetched JSON: " + JSON.stringify(fetchedJson));
+    // debug("Fetched JSON: " + JSON.stringify(fetchedJson));
     const userCount = fetchedJson.length;
-    debug("list length: " + fetchedJson.length);
+    // debug("list length: " + userCount);
 
     const userAgenString = window.navigator.userAgent;
     const ipPrommise = await fetch("https://api.ipify.org");
     const ip = await ipPrommise.text();
     const userString = ip + "," + userAgenString;
-    const unserStringEncryped = get(userString);
+    let unserStringEncryped = en(userString);
 
     debug("userString: " + userString);
+    debug("unserStringEncryped: " + unserStringEncryped);
+    debug("decripted: " + de(unserStringEncryped));
+    // unserStringEncryped = "x";
 
     let userID = localStorage.getItem("userID");
     let user = null;
 
     debug("userID: " + userID);
     debug("userCount: " + userCount);
-    debug("fetchedJson[userID]" + fetchedJson[userID]);
+    // debug("fetchedJson[userID]" + fetchedJson[userID]);
 
     if (
       userID == null ||
@@ -138,8 +127,8 @@ async function save() {
 
     fetchedJson[userID] = user;
 
-    // updatedData = fetchedJson;
-    updatedData = [user];
+    updatedData = fetchedJson;
+    // updatedData = [user];
 
     debug("updatedData: " + JSON.stringify(updatedData));
 
