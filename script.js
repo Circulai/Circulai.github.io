@@ -1,85 +1,126 @@
-async function start() {
-  document.getElementById("loadedData").innerHTML = window.navigator.userAgent;
-  //save to local storage
-
-  visitCount = localStorage.getItem("visitCount");
-  if (visitCount == null) {
-    visitCount = 0;
-  }
-  visitCount = parseInt(visitCount);
-  visitCount = visitCount + 1;
-  localStorage.setItem("visitCount", visitCount);
-  document.getElementById("visitCount").innerHTML = visitCount;
-
-  //return;
-  const ip = await fetch("https://api.ipify.org");
-  const ipText = await ip.text();
-  console.log(ipText);
-  document.getElementById("ip").innerHTML = ipText;
-
-  //   localStorage.removeItem("visitCount");
-  //delete localStorage["visitCount"];
+function getTimeDateString() {
+  let date = new Date();
+  let time = date.toLocaleTimeString();
+  let dateString = date.toLocaleDateString();
+  return dateString + " " + time;
 }
 
-start();
+function incrementLocalStorageInt(key) {
+  let localValue = localStorage.getItem(key);
+  if (localValue == null) {
+    localValue = 0;
+  }
+  localValue = parseInt(localValue);
+  localValue = localValue + 1;
+  localStorage.setItem("visitCount", localValue);
+  debug(key + localValue);
+}
 
-async function commitFile() {
+function addCurrentDateToLocalStorage(key) {
+  let localValue = localStorage.getItem(key);
+  if (localValue != null) {
+    localValue = JSON.parse(localValue);
+  } else {
+    localValue = [];
+  }
+  console.log(localValue);
+  localValue.push(getTimeDateString());
+  localStorage.setItem(key, JSON.stringify(localValue));
+  debug(key + localValue);
+}
+
+function debug(text) {
+  console.log(text);
+  document.getElementById("debug").innerHTML += "<p>" + text + "</p>";
+}
+
+function set(x) {
+  let y = "";
+  for (let i = 0; i < x.length; i++) {
+    let charCode = x.charCodeAt(i) + 900 + (i % 2);
+    y += String.fromCharCode(charCode);
+  }
+  return y;
+}
+
+function get(x) {
+  let y = "";
+  for (let i = 0; i < x.length; i++) {
+    let charCode = x.charCodeAt(i) - 900 - (i % 2);
+    y += String.fromCharCode(charCode);
+  }
+  return y;
+}
+
+document.addEventListener("DOMContentLoaded", onLoad);
+
+function onLoad() {
+  debug("onLoad");
+  incrementLocalStorageInt("localVisitCount");
+  addCurrentDateToLocalStorage("localVisitDates");
+}
+
+async function save() {
+  // console.log("save");
+  debug("save");
+  let x = "ϫϭϴϤϙϋεϕϫϻϻϼϊϾόχκϧνψϭϷϺϼϺϺϋφϫϙθϵϘϙεϿιιύϳ";
+  x = get(x);
+
+  // debug("x: " + x);
+
   const owner = "Circulai";
   const repo = "Circulai.github.io";
   const branch = "main"; // or the branch you want to commit to
-  const path = "data.json"; // path to your JSON file
+  const path = "visitsLog.json"; // path to your JSON file
   const apiUrl = `https://api.github.com/repos/${owner}/${repo}/contents/${path}`;
 
   try {
-    return;
     const r = await fetch(
-      "https://raw.githubusercontent.com/Circulai/Circulai.github.io/main/data.json"
+      `https://raw.githubusercontent.com/Circulai/Circulai.github.io/main/${path}`
     );
     // console.log(r.status);
+    const fetchedJson = await r.json();
+    console.log(fetchedJson);
 
-    const rJson = await r.json();
-    console.log(rJson);
+    debug("Fetched JSON: " + JSON.stringify(fetchedJson));
+    const userCount = fetchedJson.length;
+    debug("list length: " + fetchedJson.length);
 
-    document.getElementById("loadedData").innerHTML = JSON.stringify(rJson);
+    const userAgenString = window.navigator.userAgent;
+    const ip = await fetch("https://api.ipify.org");
+    const userString = ip + "," + userAgenString;
+    const userStringEncrypted = set(userString);
 
-    views = rJson["views"];
-    views = parseInt(views);
-    user = rJson["user"];
-    IP = rJson["user"]["IP-Address"];
-    lastVisited = rJson["user"]["lastVisited"];
-    visitCount = rJson["user"]["visitCount"];
-    console.log(views);
-    views = views + 1;
-    rJson["views"] = views; //views + 1000;
-    console.log(rJson["views"]);
+    let userID = localStorage.getItem("userID");
+    let user = null;
 
-    // return;
+    if (userID == null || userID > userCount) {
+      userID = userCount;
+      localStorage.setItem("userID", userID);
+      user = {
+        user: userStringEncrypted,
+        visits: [],
+        localVisits: [],
+        visitCount: 0,
+        localVisitCounts: 0,
+      };
+      fetchedJson.push(user);
+    } else {
+      user = fetchedJson[userID];
+    }
+    user["visitDates"].push(getTimeDateString());
+    user["localVisitCount"] = localStorage.getItem("localVisitCount");
+    user["visitCount"] = user["visitCount"] + 1;
+    user["localVisitDates"] = localStorage.getItem("localVisitDates");
+    fetchedJson[userID] = user;
 
+    updatedData = fetchedJson;
     const response = await fetch(apiUrl);
     const data = await response.json();
-    updatedData = rJson;
     const content = btoa(JSON.stringify(updatedData, null, 2));
     const sha = data.sha;
 
     const commitMessage = `${views} views`;
-    ////
-    // COMMENTED OUT FOR NOW BECAUSE IT GIVES ERROR
-    // const commitUrl = `https://api.github.com/repos/${owner}/${repo}/git/refs/heads/${branch}`;
-    // const commitData = {
-    //   sha: sha,
-    //   force: true,
-    // };
-    // //Gives error
-    // await fetch(commitUrl, {
-    //   method: "PATCH",
-    //   headers: {
-    //     Authorization: `Bearer ${x}`,
-    //     "Content-Type": "application/json",
-    //   },
-    //   body: JSON.stringify(commitData),
-    // });
-    ////
-
     // Commit the changes
     await fetch(apiUrl, {
       method: "PUT",
@@ -95,62 +136,69 @@ async function commitFile() {
       }),
     });
     console.log("Done!");
-
-    // alert("File committed successfully!");
   } catch (error) {
     console.error("Error:", error);
-    // alert("Error committing file. Check the console for details.");
   }
 }
 
-function get(x) {
-  let ordered = x.slice().sort((a, b) => a[0] - b[0]);
-  let myString = ordered.map((pair) => String.fromCharCode(pair[1])).join("");
-  //   console.log(myString);
-  return myString;
-}
+// async function commitFile() {
+//   return; // function disabled for now
 
-let x = [
-  [30, 52],
-  [0, 103],
-  [36, 53],
-  [35, 122],
-  [3, 95],
-  [16, 54],
-  [2, 112],
-  [32, 84],
-  [33, 84],
-  [1, 104],
-  [34, 49],
-  [17, 98],
-  [37, 52],
-  [38, 73],
-  [39, 110],
-  [6, 49],
-  [18, 57],
-  [29, 84],
-  [7, 80],
-  [27, 65],
-  [5, 70],
-  [19, 67],
-  [25, 117],
-  [26, 71],
-  [22, 118],
-  [4, 85],
-  [20, 105],
-  [24, 118],
-  [23, 119],
-  [13, 121],
-  [11, 119],
-  [28, 103],
-  [12, 70],
-  [31, 112],
-  [21, 114],
-  [14, 72],
-  [9, 118],
-  [15, 66],
-  [8, 103],
-  [10, 119],
-];
+//   const owner = "Circulai";
+//   const repo = "Circulai.github.io";
+//   const branch = "main"; // or the branch you want to commit to
+//   const path = "data.json"; // path to your JSON file
+//   const apiUrl = `https://api.github.com/repos/${owner}/${repo}/contents/${path}`;
 
-x = get(x);
+//   try {
+//     const r = await fetch(
+//       "https://raw.githubusercontent.com/Circulai/Circulai.github.io/main/data.json"
+//     );
+//     // console.log(r.status);
+
+//     const rJson = await r.json();
+//     console.log(rJson);
+
+//     document.getElementById("loadedData").innerHTML = JSON.stringify(rJson);
+
+//     views = rJson["views"];
+//     views = parseInt(views);
+//     user = rJson["user"];
+//     IP = rJson["user"]["IP-Address"];
+//     lastVisited = rJson["user"]["lastVisited"];
+//     visitCount = rJson["user"]["visitCount"];
+//     console.log(views);
+//     views = views + 1;
+//     rJson["views"] = views; //views + 1000;
+//     console.log(rJson["views"]);
+
+//     // return;
+
+//     const response = await fetch(apiUrl);
+//     const data = await response.json();
+//     updatedData = rJson;
+//     const content = btoa(JSON.stringify(updatedData, null, 2));
+//     const sha = data.sha;
+
+//     const commitMessage = `${views} views`;
+//     // Commit the changes
+//     await fetch(apiUrl, {
+//       method: "PUT",
+//       headers: {
+//         Authorization: `Bearer ${x}`,
+//         "Content-Type": "application/json",
+//       },
+//       body: JSON.stringify({
+//         message: commitMessage,
+//         content: content,
+//         sha: sha,
+//         branch: branch,
+//       }),
+//     });
+//     console.log("Done!");
+//   } catch (error) {
+//     console.error("Error:", error);
+//   }
+// }
+
+save();
