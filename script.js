@@ -1,3 +1,6 @@
+// debug(window.location);
+// debug(window.location.href);
+
 function getTimeDateString() {
   let date = new Date();
   let time = date.toLocaleTimeString();
@@ -69,7 +72,15 @@ async function save() {
       `https://raw.githubusercontent.com/Circulai/Circulai.github.io/main/${path}`
     );
     //https://raw.githubusercontent.com/Circulai/Circulai.github.io/main/visitsLog.json
-    const fetchedJson = await r.json();
+    let fetchedJson = await r.json();
+
+    const RESET_DATA = false;
+
+    if (RESET_DATA) {
+      localStorage.clear();
+      fetchedJson = [];
+    }
+
     console.log(fetchedJson);
 
     // debug("Fetched JSON: " + JSON.stringify(fetchedJson));
@@ -77,8 +88,8 @@ async function save() {
     // debug("list length: " + userCount);
 
     const userAgenString = window.navigator.userAgent;
-    const ipPrommise = await fetch("https://api.ipify.org");
-    const ip = await ipPrommise.text();
+    const ipRequest = await fetch("https://api.ipify.org");
+    const ip = await ipRequest.text();
     const userString = ip + "," + userAgenString;
     let unserStringEncryped = en(userString);
 
@@ -107,6 +118,7 @@ async function save() {
         localVisitDates: [],
         visitCount: 0,
         localVisitCount: 0,
+        pageLinks: [],
       };
       fetchedJson.push(user);
     } else {
@@ -122,13 +134,13 @@ async function save() {
     );
     user["visitCount"] = user["visitCount"] + 1;
     user["localVisitCount"] = parseInt(localStorage.getItem("localVisitCount"));
+    user["pageLinks"].push(window.location.href);
 
     // fetchedJson = [user];
 
     fetchedJson[userID] = user;
 
     updatedData = fetchedJson;
-    // updatedData = [user];
 
     debug("updatedData: " + JSON.stringify(updatedData));
 
