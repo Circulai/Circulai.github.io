@@ -24,6 +24,13 @@ except KeyError:
     #raise
 
 
+print("HELLO XQC 1 PRINT: "+SOME_SECRET)
+logger.info(f"HELLO XQC 2 LOGGER: "+SOME_SECRET)
+
+
+
+
+
 if __name__ == "__main__":
     logger.info(f"Token value: {SOME_SECRET}")
 
@@ -32,3 +39,4 @@ if __name__ == "__main__":
         data = r.json()
         temperature = data["forecast"]["temp"]
         logger.info(f'Weather in Berlin: {temperature}')
+        print("MAIN XQC")
