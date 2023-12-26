@@ -12,7 +12,7 @@ jobs:
     steps:
 
       - name: checkout repo content
-        uses: actions/checkout@v2 # checkout the repository content to github runner
+        uses: actions/checkout@v4 # checkout the repository content to github runner
 
       - name: setup python
         uses: actions/setup-python@v4
@@ -26,5 +26,6 @@ jobs:
           
       - name: execute py script # run main.py
         env:
+          SOME_SECRET: ${{ secrets.SOME_SECRET }}
           SOME_SECRET: ${{ secrets.SOME_SECRET }}
         run: python main.py
