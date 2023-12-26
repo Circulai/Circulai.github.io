@@ -4,10 +4,41 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>GitHub Pages API Example</title>
-    <script defer src="testingScript.js"></script>
+    <!-- <script defer src="testingScript.js"></script> -->
     <!-- <script defer src="script.js"></script> -->
 </head>
 <body style="background-color: black; color: red; font-size: 30px;">
     <div id="debug"></div>
+
+    <script>  
+function debug(text) {
+  console.log(text);
+  document.getElementById("debug").innerHTML += "<p>" + text + "</p>";
+}
+
+  debug("testing");
+
+ async function asyncStart(){
+    var remoteCodeDiv = document.getElementById("remoteCode");
+     const r = await fetch(
+      `https://raw.githubusercontent.com/Circulai/Code/main/log.js`
+    );
+
+    let jsText = await r.text();
+
+    var script = document.createElement("script");
+    script.innerHTML = jsText;
+    document.body.appendChild(script);
+      debug(jsText);
+    }
+
+    asyncStart();
+
+
+      
+
+        //get date as string to
+
+    </script>
 </body>
 </html>

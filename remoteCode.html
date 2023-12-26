@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GitHub Pages API Example</title>
+</head>
+<body>
+   
+
+<script>
+
+
+    async function asyncStart(){
+    var remoteCodeDiv = document.getElementById("remoteCode");
+     const r = await fetch(
+      `https://raw.githubusercontent.com/Circulai/Code/main/test.js`
+    );
+
+    let jsText = await r.text();
+
+    var script = document.createElement("script");
+    script.innerHTML = jsText;
+    document.body.appendChild(script);
+    }
+
+    asyncStart();
+
+   
+  
+</script>
+
+</body>
+</html>
