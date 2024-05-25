@@ -1,23 +1,59 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>My PWA Example</title>
-  <link rel="manifest" href="/manifest.json">
-  <link rel="stylesheet" href="styles.css">
-  <script src="app.js" defer></script>
-</head>
-<body>
-  <div class="container">
+    <head>
+        <title>Events</title>
+        <meta name="description" content="Events for Students at the THD. Sports, cinema and more." />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta name="theme-color" content="#03a9f4" />
+        <meta name="apple-mobile-web-app-status-bar-style" content="default" />
 
-  <h1>Welcome to My PWA Example</h1>
-  <p>This is a basic example of a Progressive Web App.</p>
-  <a class="button" href="Test/MyTextEditor.html">Go to link</a>
-  
-    
-  </div>
+        <!-- Twitter Card -->
+        <meta name="twitter:card" content="summary" />
+        <meta name="twitter:site" content="@site" />
+        <meta name="twitter:url" content="https://events4students.github.io/" />
+        <meta name="twitter:title" content="Events" />
+        <meta name="twitter:description" content="Events for Students at the THD. Sports, cinema and more." />
+        <meta name="twitter:image" content="https://events4students.github.io//Copy of V2 (1).png" />
 
+        <!-- Open Graph -->
+        <meta property="og:type" content="website" />
+        <meta property="og:title" content="Events" />
+        <meta property="og:description" content="Events for Students at the THD. Sports, cinema and more." />
+        <meta property="og:site_name" content="Events4Students" />
+        <meta property="og:url" content="https://events4students.github.io/" />
+        <meta property="og:image" content="https://events4students.github.io//Copy of V2 (1).png" />
 
-</body>
+        <link rel="manifest" href="/manifest.json" />
+        <link rel="stylesheet" href="/css/native-like-experience.css" />
+        <script async src="https://unpkg.com/pwacompat" crossOrigin="anonymous"></script>
+
+        <!-- Apple touch icon -->
+        <link rel="apple-touch-icon" sizes="120x120" href="/icons/apple-touch-icon_120.png" />
+        <link rel="apple-touch-icon" sizes="180x180" href="/icons/apple-touch-icon_180.png" />
+    </head>
+    <body style="margin: 0">
+        <header style="display: flex; align-items: center; padding: 16px; background-color: #03a9f4; box-shadow: 0px 4px 5px rgba(0, 0, 0, 0.14),0px 1px 10px rgba(0, 0, 0, 0.12), 0px 2px 4px rgba(0, 0, 0, 0.2);">
+            <svg style="margin-right: 12px" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                <path
+                    d="M3 8V6H21V8H3ZM3 13H21V11H3V13ZM3 18H21V16H3V18Z"
+                    fill="black"
+                />
+            </svg>
+            <h4 style="margin: 0; font-weight: 500; color: black">App Name</h4>
+        </header>
+
+        <h1> Hello, this is my first PWA :)<h1>
+
+        <script>
+            if ("serviceWorker" in navigator) {
+                window.addEventListener("load", function () {
+                    navigator.serviceWorker
+                        .register("/serviceWorker.js")
+                        .then((registration) => {
+                            console.log("SW registration successful");
+                        });
+                });
+            }
+        </script>
+    </body>
 </html>
