@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Line Chart with Chart.js</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        .buttons {
+            margin-bottom: 20px;
+        }
+        .buttons button {
+            margin-right: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="buttons">
+        <button onclick="showDataset('comments')">Comments</button>
+        <button onclick="showDataset('likes')">Likes</button>
+        <button onclick="showDataset('views')">Views</button>
+    </div>
+    <canvas id="myChart" width="400" height="200"></canvas>
+    <script>
+        const alldataArray = [
+            {
+                "comments": 10918,
+                "date": "2024-06-19 23:36:49",
+                "likes": 2071973,
+                "views": 9490745
+            },
+            {
+                "comments": 10919,
+                "date": "2024-06-20 09:59:40",
+                "likes": 2071942,
+                "views": 9491194
+            },
+        ];
+
+        const labels = alldataArray.map(data => new Date(data.date).toLocaleString());
+        const commentsData = alldataArray.map(data => data.comments);
+        const likesData = alldataArray.map(data => data.likes);
+        const viewsData = alldataArray.map(data => data.views);
+
+        const ctx = document.getElementById('myChart').getContext('2d');
+        let myChart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: labels,
+                datasets: []
+            },
+            options: {
+                scales: {
+                    x: {
+                        title: {
+                            display: true,
+                            text: 'Date'
+                        }
+                    },
+                    y: {
+                        title: {
+                            display: true,
+                            text: 'Count'
+                        },
+                        beginAtZero: false
+                    }
+                }
+            }
+        });
+
+        function showDataset(type) {
+            let dataset;
+            if (type === 'comments') {
+                dataset = {
+                    label: 'Comments',
+                    data: commentsData,
+                    borderColor: 'rgba(75, 192, 192, 1)',
+                    borderWidth: 1,
+                    fill: false
+                };
+            } else if (type === 'likes') {
+                dataset = {
+                    label: 'Likes',
+                    data: likesData,
+                    borderColor: 'rgba(255, 99, 132, 1)',
+                    borderWidth: 1,
+                    fill: false
+                };
+            } else if (type === 'views') {
+                dataset = {
+                    label: 'Views',
+                    data: viewsData,
+                    borderColor: 'rgba(54, 162, 235, 1)',
+                    borderWidth: 1,
+                    fill: false
+                };
+            }
+            myChart.data.datasets = [dataset];
+            myChart.update();
+        }
+
+        // Initialize with the first dataset
+        showDataset('comments');
+    </script>
+</body>
+</html>

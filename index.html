@@ -1,59 +1,133 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <title>Events</title>
-        <meta name="description" content="Events for Students at the THD. Sports, cinema and more." />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <meta name="theme-color" content="#03a9f4" />
-        <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Instalytics</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="app.js"></script>
+    <script src="base.js"></script>
+    <script src="firebase.js"></script>
 
-        <!-- Twitter Card -->
-        <meta name="twitter:card" content="summary" />
-        <meta name="twitter:site" content="@site" />
-        <meta name="twitter:url" content="https://events4students.github.io/" />
-        <meta name="twitter:title" content="Events" />
-        <meta name="twitter:description" content="Events for Students at the THD. Sports, cinema and more." />
-        <meta name="twitter:image" content="https://events4students.github.io//Copy of V2 (1).png" />
+    <style>
 
-        <!-- Open Graph -->
-        <meta property="og:type" content="website" />
-        <meta property="og:title" content="Events" />
-        <meta property="og:description" content="Events for Students at the THD. Sports, cinema and more." />
-        <meta property="og:site_name" content="Events4Students" />
-        <meta property="og:url" content="https://events4students.github.io/" />
-        <meta property="og:image" content="https://events4students.github.io//Copy of V2 (1).png" />
+        .buttons {
+          display: flex;
+          /* #center buttons*/
+            justify-content: center;
+            /* margin-bottom: 20px; */
+            /* gap: 10px; */
 
-        <link rel="manifest" href="/manifest.json" />
-        <link rel="stylesheet" href="/css/native-like-experience.css" />
-        <script async src="https://unpkg.com/pwacompat" crossOrigin="anonymous"></script>
 
-        <!-- Apple touch icon -->
-        <link rel="apple-touch-icon" sizes="120x120" href="/icons/apple-touch-icon_120.png" />
-        <link rel="apple-touch-icon" sizes="180x180" href="/icons/apple-touch-icon_180.png" />
-    </head>
-    <body style="margin: 0">
-        <header style="display: flex; align-items: center; padding: 16px; background-color: #03a9f4; box-shadow: 0px 4px 5px rgba(0, 0, 0, 0.14),0px 1px 10px rgba(0, 0, 0, 0.12), 0px 2px 4px rgba(0, 0, 0, 0.2);">
-            <svg style="margin-right: 12px" width="24" height="24" viewBox="0 0 24 24" fill="none">
-                <path
-                    d="M3 8V6H21V8H3ZM3 13H21V11H3V13ZM3 18H21V16H3V18Z"
-                    fill="black"
-                />
-            </svg>
-            <h4 style="margin: 0; font-weight: 500; color: black">App Name</h4>
-        </header>
+        }
+    
+        .buttons button {
+            /* margin-right: 10px; */
+            border-radius: 20px;
+            border: none;
+            padding: 10px 20px;
+            margin: 10px;
+            
+        }
 
-        <h1> Hello, this is my first PWA :)<h1>
 
-        <script>
-            if ("serviceWorker" in navigator) {
-                window.addEventListener("load", function () {
-                    navigator.serviceWorker
-                        .register("/serviceWorker.js")
-                        .then((registration) => {
-                            console.log("SW registration successful");
-                        });
-                });
+    </style>
+</head>
+<body>
+    <div class="buttons">
+        <button onclick="showDataset('comments')">Comments</button>
+        <button onclick="showDataset('likes')">Likes</button>
+        <button onclick="showDataset('views')">Views</button>
+    </div>
+    <canvas id="myChart" width="400" height="200"></canvas>
+   
+    <script>
+        let myChart = null;
+        let labels = [];
+        let commentsData = [];
+        let likesData = [];
+        let viewsData = [];
+
+
+
+
+
+        let allData = [];
+        function setAllData(data) {
+            console.log(data);
+            allData = data;
+            labels = allData.map(data => new Date(data.date).toLocaleString());
+            commentsData = allData.map(data => data.comments);
+            likesData = allData.map(data => data.likes);
+            viewsData = allData.map(data => data.views);
+            createChart();
+            showDataset('views');
+            // console.log(allData);
+        }
+
+        function createChart(){
+                const ctx = document.getElementById('myChart').getContext('2d');
+             myChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: []
+                },
+                options: {
+                    scales: {
+                        x: {
+                            title: {
+                                display: true,
+                                text: 'Date'
+                            }
+                        },
+                        y: {
+                            title: {
+                                display: true,
+                                text: 'Count'
+                            },
+                            beginAtZero: false
+                        }
+                    }
+                }
+            });
+        }
+
+
+         function showDataset(type) {
+                let dataset;
+                if (type === 'comments') {
+                    dataset = {
+                        label: 'Comments',
+                        data: commentsData,
+                        borderColor: 'rgba(75, 192, 192, 1)',
+                        borderWidth: 1,
+                        fill: false
+                    };
+                } else if (type === 'likes') {
+                    dataset = {
+                        label: 'Likes',
+                        data: likesData,
+                        borderColor: 'rgba(255, 99, 132, 1)',
+                        borderWidth: 1,
+                        fill: false
+                    };
+                } else if (type === 'views') {
+                    dataset = {
+                        label: 'Views',
+                        data: viewsData,
+                        borderColor: 'rgba(54, 162, 235, 1)',
+                        borderWidth: 1,
+                        fill: false
+                    };
+                }
+                myChart.data.datasets = [dataset];
+                myChart.update();
             }
-        </script>
-    </body>
+
+
+    
+    </script>
+
+</body>
 </html>
