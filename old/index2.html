@@ -9,15 +9,18 @@
 
 <style type="text/css">
     
-body {
+    body {
     font-family: Arial, sans-serif;
     margin: 0;
     padding: 0;
     background: #4CAF50;
+
     color: white;
 }
 
 header {
+    
+    
     padding: 1em 0;
     text-align: center;
 }
@@ -41,10 +44,10 @@ header nav ul li {
 header nav ul li a {
     color: white;
     text-decoration: none;
-    padding: 0.5em;
 }
 
 .banner {
+    /*background: url('forest.jpg') no-repeat center center;*/
     background-size: cover;
     color: white;
     padding: 4em 2em;
@@ -69,8 +72,6 @@ header nav ul li a {
     color: white;
     padding: 0.5em 1em;
     text-decoration: none;
-    display: inline-block;
-    margin: 0.5em;
 }
 
 main {
@@ -88,6 +89,10 @@ section h2 {
 
 .service {
     margin-bottom: 1em;
+}
+a{
+    background: rgba(0, 0, 0, 0.1);
+    padding: 20px;
 }
 
 form {
@@ -110,8 +115,6 @@ button {
     border: none;
     color: white;
     padding: 0.5em 1em;
-    width: 100%;
-    box-sizing: border-box;
 }
 
 footer {
@@ -120,13 +123,6 @@ footer {
     padding: 1em 0;
     text-align: center;
 }
-
-a{
-    background: rgba(0, 0, 0, 0.1);
-    padding: 20px;
-    border-radius: 10px;
-}
-
 
 .footer-links a {
     color: white;
@@ -152,59 +148,27 @@ a{
 }
 
 .image-gallery img {
-    max-width: 45%;
-    height: auto;
+    max-width: 20%;
+    height: 20%;
     border: 2px solid #4CAF50;
     padding: 5px;
     box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.1);
 }
 
-#languageSelect {
+#languageSelect{
     position: absolute;
     top: 20px;
     right: 20px;
-    padding: 10px;
+    padding: 20px;
     border-radius: 10px;
-    background-color: rgba(0, 0, 0, 0.1);
+    background-color:  rgba(0, 0, 0, 0.1);
     color: white;
-    font-size: 16px;
+    font-size: 30px;
     font-weight: bold;
 }
 
-footer {
+footer{
     padding-bottom: 60px;
-}
-
-@media (max-width: 600px) {
-    .banner h1 {
-        font-size: 2em;
-    }
-
-    .banner p {
-        font-size: 1em;
-    }
-
-    .cta {
-        padding: 0.5em 0.8em;
-    }
-
-    header nav ul li {
-        display: block;
-        margin: 0.5em 0;
-    }
-
-    .image-gallery img {
-        max-width: 90%;
-    }
-
-    #languageSelect {
-        font-size: 14px;
-        padding: 5px;
-    }
-
-    button {
-        padding: 0.7em;
-    }
 }
 
  
