@@ -3,9 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <script src="github.js"></script>
-
+    <script src="local.js"></script>
     <title>Company Information</title>
     <style>
         table {
@@ -38,17 +36,6 @@
     // Get table elements
     const tableHeaders = document.getElementById("tableHeaders");
     const tableBody = document.getElementById("tableBody");
-
-
-    function main() {
-        getGitHubJson().then(data => {
-            // Generate headers and rows
-            const keys = generateTableHeaders(data);
-            generateTableRows(data, keys);
-        });
-    }
-
-
     // Function to generate table headers based on object keys
     function generateTableHeaders(data) {
         const allKeys = new Set();
@@ -100,11 +87,9 @@
             tableBody.appendChild(tr);
         });
     }
-
-    document.addEventListener("DOMContentLoaded", main);
     // Generate headers and rows
-    // const keys = generateTableHeaders(dataExample);
-    // generateTableRows(dataExample, keys);
+    const keys = generateTableHeaders(localData);
+    generateTableRows(localData, keys);
 </script>
 </body>
 </html>
